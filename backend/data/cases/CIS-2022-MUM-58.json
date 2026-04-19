@@ -1,0 +1,26 @@
+{
+  "case_id": "CIS-2022-MUM-58",
+  "title": "Dadar Impersonation Fraud",
+  "date_of_incident": "2022-10-03",
+  "date_resolved": "2022-10-19",
+  "jurisdiction": "Mumbai, Maharashtra",
+  "incident_type": "Fraud",
+  "description": "A 67-year-old retired government employee was defrauded of Rs 4.2 lakhs by a caller posing as a CBI officer. Victim was told his Aadhaar was linked to a money laundering case and instructed to transfer funds to a safe account for verification. Three calls over two days.",
+  "modus_operandi": "Phone-based impersonation of law enforcement, fear and urgency tactics, digital transfer to mule accounts, elderly victim targeting.",
+  "suspects": [
+    { "suspect_id": "S-01", "description": "Unknown, operated via spoofed number, Hindi-speaking with neutral accent", "sketch_path": null }
+  ],
+  "evidence": [
+    { "id": "E-01", "type": "digital", "description": "Spoofed call originated from VoIP number routed through a server in Rajasthan" },
+    { "id": "E-02", "type": "financial", "description": "Funds transferred to mule account in Jharkhand, withdrawn within 2 hours" },
+    { "id": "E-03", "type": "digital", "description": "VoIP server IP traced to a registered cyber cafe in Bharatpur" }
+  ],
+  "blind_spots": [
+    "Mule account flagging delayed by 3 days — funds already withdrawn",
+    "VoIP trace deprioritised initially as out-of-jurisdiction",
+    "No cross-reference with Jharkhand cyber crime cell done until day 9"
+  ],
+  "resolution": "Cyber cafe CCTV identified operator. Coordinated arrest with Rajasthan police on day 16.",
+  "tags": ["fraud", "impersonation", "elderly-victim", "voip", "mule-account", "cyber-crime", "phone-based"],
+  "embedded": false
+}

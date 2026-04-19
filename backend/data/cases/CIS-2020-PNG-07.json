@@ -1,0 +1,26 @@
+{
+  "case_id": "CIS-2020-PNG-07",
+  "title": "Koregaon Park Flat Burglary",
+  "date_of_incident": "2020-11-05",
+  "date_resolved": "2020-11-18",
+  "jurisdiction": "Pune, Maharashtra",
+  "incident_type": "Burglary",
+  "description": "Residents of a 4th floor apartment in Koregaon Park returned from a weekend trip to find their flat had been broken into. Lock picked cleanly, no signs of forced entry. Cash, laptop, and jewellery stolen. Neighbours reported seeing an unfamiliar man in a delivery uniform in the building two days prior.",
+  "modus_operandi": "Solo operator, lock picking, pre-visit in disguise to scout, targeted weekend absence, no forced entry.",
+  "suspects": [
+    { "suspect_id": "S-01", "description": "Male, 5'8\", slim, seen in blue delivery uniform, clean-shaven", "sketch_path": null }
+  ],
+  "evidence": [
+    { "id": "E-01", "type": "witness_statement", "description": "Neighbour described man in delivery uniform on Wednesday prior" },
+    { "id": "E-02", "type": "physical", "description": "No forced entry, lock picked — specialised skill indicated" },
+    { "id": "E-03", "type": "cctv", "description": "Building lobby camera captured delivery uniform suspect, face partially visible" }
+  ],
+  "blind_spots": [
+    "Delivery company logs not checked until day 6",
+    "Lock picking MO not cross-referenced with similar Pune cases from 2019",
+    "Building visitor log not collected on day 0"
+  ],
+  "resolution": "CCTV face matched a suspect with prior lock-picking arrest in Pune 2019. Arrested day 13 in Kothrud.",
+  "tags": ["burglary", "solo-operator", "lock-picking", "disguise", "weekend-absence", "pre-scouted"],
+  "embedded": false
+}

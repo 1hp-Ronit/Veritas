@@ -1,0 +1,27 @@
+{
+  "case_id": "CIS-2023-DEL-41",
+  "title": "Dwarka SUV Carjacking",
+  "date_of_incident": "2023-01-29",
+  "date_resolved": "2023-02-11",
+  "jurisdiction": "New Delhi",
+  "incident_type": "Vehicle Theft",
+  "description": "A man was carjacked at gunpoint in Dwarka Sector 12 at 11 PM while parking his SUV. Two suspects approached on foot, one produced a pistol, forced victim out, and drove off. Vehicle recovered 3 days later abandoned in Gurugram with plates changed.",
+  "modus_operandi": "Two-person foot approach, armed, late night parking area targeting, quick exit, plate swap after theft.",
+  "suspects": [
+    { "suspect_id": "S-01", "description": "Male, 5'10\", armed, wore dark hoodie and jeans", "sketch_path": null },
+    { "suspect_id": "S-02", "description": "Male, 5'7\", drove getaway, partial face on parking camera", "sketch_path": null }
+  ],
+  "evidence": [
+    { "id": "E-01", "type": "cctv", "description": "Parking area camera captured approach and carjacking" },
+    { "id": "E-02", "type": "vehicle", "description": "SUV found in Gurugram with cloned plates from a scrapped vehicle" },
+    { "id": "E-03", "type": "forensic", "description": "Fingerprints lifted from steering wheel of recovered vehicle" }
+  ],
+  "blind_spots": [
+    "Cloned plate origin not traced for 5 days",
+    "Gurugram police not looped in until day 4",
+    "Similar carjacking MO in Noida from 2022 not cross-referenced"
+  ],
+  "resolution": "Fingerprint matched a suspect with prior carjacking record in UP. Arrested in Faridabad on day 13.",
+  "tags": ["vehicle-theft", "carjacking", "armed", "late-night", "plate-swap", "two-person-team"],
+  "embedded": false
+}

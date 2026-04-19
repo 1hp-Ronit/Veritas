@@ -1,0 +1,26 @@
+{
+  "case_id": "CIS-2021-HYD-19",
+  "title": "Jubilee Hills ATM Skimming",
+  "date_of_incident": "2021-09-01",
+  "date_resolved": "2021-09-21",
+  "jurisdiction": "Hyderabad, Telangana",
+  "incident_type": "Fraud",
+  "description": "A skimming device was discovered on an ATM in Jubilee Hills after 34 customers reported unauthorised transactions over a 10-day period. Device included a miniature camera aimed at the keypad. Estimated loss of Rs 8.4 lakhs across victims.",
+  "modus_operandi": "Skimming device planted during low-traffic hours, miniature keypad camera, card data cloned and used within 48 hours of capture.",
+  "suspects": [
+    { "suspect_id": "S-01", "description": "Male, 5'10\", wore helmet inside ATM kiosk to obscure face, planted device", "sketch_path": null }
+  ],
+  "evidence": [
+    { "id": "E-01", "type": "physical", "description": "Skimming device with internal SIM card for remote data transmission" },
+    { "id": "E-02", "type": "cctv", "description": "ATM camera captured suspect planting device, face hidden by helmet" },
+    { "id": "E-03", "type": "digital", "description": "SIM card IMEI traced to a prepaid number purchased in Secunderabad" }
+  ],
+  "blind_spots": [
+    "SIM card IMEI not traced until day 8",
+    "Similar skimming MO reported in Begumpet 3 months prior — not cross-referenced",
+    "Bank transaction pattern analysis delayed by 4 days"
+  ],
+  "resolution": "IMEI trace led to prepaid SIM buyer. Suspect identified via shop CCTV. Arrested day 21 in Secunderabad.",
+  "tags": ["fraud", "atm-skimming", "digital-evidence", "organised", "prepaid-sim", "cloned-cards"],
+  "embedded": false
+}

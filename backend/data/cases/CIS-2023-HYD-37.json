@@ -1,0 +1,26 @@
+{
+  "case_id": "CIS-2023-HYD-37",
+  "title": "Banjara Hills Residential Burglary",
+  "date_of_incident": "2023-05-20",
+  "date_resolved": "2023-06-02",
+  "jurisdiction": "Hyderabad, Telangana",
+  "incident_type": "Burglary",
+  "description": "A bungalow in Banjara Hills was burgled while the family was at a wedding. Perimeter wall scaled, rear door forced. Jewellery worth Rs 35 lakhs and two laptops stolen. Domestic help had been given the day off — suspected to be involved.",
+  "modus_operandi": "Wall scaling, rear entry, targeted high-value residential, inside knowledge of family absence, domestic help angle.",
+  "suspects": [
+    { "suspect_id": "S-01", "description": "Male, athletic, scaled 8-foot compound wall, no CCTV coverage at rear", "sketch_path": null }
+  ],
+  "evidence": [
+    { "id": "E-01", "type": "physical", "description": "Shoe impressions on wall top and garden mud, size 9" },
+    { "id": "E-02", "type": "forensic", "description": "Partial fingerprint on rear door handle" },
+    { "id": "E-03", "type": "witness_statement", "description": "Neighbour saw unfamiliar auto parked outside at 2 PM" }
+  ],
+  "blind_spots": [
+    "Domestic help not questioned until day 5",
+    "Shoe impression not cast until day 3",
+    "Jewellery not registered on stolen property database until day 7"
+  ],
+  "resolution": "Domestic help phone records showed contact with convicted burglar. Suspect arrested day 13. Jewellery recovered.",
+  "tags": ["burglary", "inside-job", "residential", "wall-scaling", "domestic-help", "high-value"],
+  "embedded": false
+}

@@ -1,0 +1,26 @@
+{
+  "case_id": "CIS-2024-BLR-29",
+  "title": "Whitefield IT Park Laptop Theft",
+  "date_of_incident": "2024-01-11",
+  "date_resolved": "2024-01-23",
+  "jurisdiction": "Bangalore, Karnataka",
+  "incident_type": "Burglary",
+  "description": "34 laptops stolen from an IT company office on the 6th floor of a Whitefield tech park over a weekend. Access card cloned to enter the building. Internal office door forced. Theft targeted only high-spec developer machines, suggesting prior knowledge of asset locations.",
+  "modus_operandi": "Cloned access card, weekend timing, forced internal door, selective high-value theft, inside knowledge of machine locations.",
+  "suspects": [
+    { "suspect_id": "S-01", "description": "Male, seen in building on Friday evening, wore company branded cap", "sketch_path": null }
+  ],
+  "evidence": [
+    { "id": "E-01", "type": "digital", "description": "Access card log showed cloned card entry at 11:40 PM Saturday" },
+    { "id": "E-02", "type": "cctv", "description": "Lift camera captured suspect with trolley bag exiting at midnight" },
+    { "id": "E-03", "type": "digital", "description": "Stolen laptop IMEIs flagged on dark web resale forum within 5 days" }
+  ],
+  "blind_spots": [
+    "Access card clone not flagged by IT security until day 3",
+    "Former employee list not cross-checked until day 6",
+    "Dark web monitoring not initiated until day 5"
+  ],
+  "resolution": "Former employee with access card knowledge identified. Arrested day 12. Laptops recovered from Hosur storage.",
+  "tags": ["burglary", "cloned-access-card", "inside-job", "weekend", "electronics", "it-company", "dark-web"],
+  "embedded": false
+}

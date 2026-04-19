@@ -1,0 +1,26 @@
+{
+  "case_id": "CIS-2021-MUM-33",
+  "title": "Bandra Vehicle Theft Ring",
+  "date_of_incident": "2021-06-10",
+  "date_resolved": "2021-07-02",
+  "jurisdiction": "Mumbai, Maharashtra",
+  "incident_type": "Vehicle Theft",
+  "description": "Six high-end vehicles stolen from Bandra West residential lanes over 12 days. All vehicles were SUVs. Thefts occurred between 2 AM and 4 AM. No alarms triggered, suggesting relay attack on keyless entry systems. One witness reported a white van parked nearby on multiple nights.",
+  "modus_operandi": "Organised ring, relay attack on keyless entry, targeting high-value SUVs, late night operation, support vehicle used.",
+  "suspects": [
+    { "suspect_id": "S-01", "description": "Male, seen driving white Tempo Traveller, stocky, short hair", "sketch_path": null }
+  ],
+  "evidence": [
+    { "id": "E-01", "type": "witness_statement", "description": "White van seen parked on 3 of the 6 theft nights" },
+    { "id": "E-02", "type": "cctv", "description": "Toll plaza camera captured stolen SUV on Western Express Highway at 4:30 AM" },
+    { "id": "E-03", "type": "vehicle", "description": "White Tempo Traveller partial plate MH-01 identified near scene" }
+  ],
+  "blind_spots": [
+    "Relay attack equipment not flagged as MO until day 9",
+    "Toll plaza footage not pulled for 5 days",
+    "No cross-check with vehicle theft rings operating in Thane and Navi Mumbai"
+  ],
+  "resolution": "Toll camera led to chop shop in Bhiwandi. Ring of 4 arrested. 5 of 6 vehicles recovered.",
+  "tags": ["vehicle-theft", "organised-ring", "relay-attack", "late-night", "suv", "support-vehicle"],
+  "embedded": false
+}

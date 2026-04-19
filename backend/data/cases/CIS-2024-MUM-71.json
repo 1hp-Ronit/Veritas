@@ -1,0 +1,27 @@
+{
+  "case_id": "CIS-2024-MUM-71",
+  "title": "Malad Assault and Robbery",
+  "date_of_incident": "2024-06-19",
+  "date_resolved": "2024-07-01",
+  "jurisdiction": "Mumbai, Maharashtra",
+  "incident_type": "Assault",
+  "description": "A 34-year-old businessman was assaulted and robbed outside a Malad West restaurant at 11:30 PM. Three suspects attacked from behind, took cash, watch, and phone, and fled in a car. Victim sustained head injuries. Restaurant CCTV captured partial view of the car.",
+  "modus_operandi": "Three-person team, ambush from behind, late night restaurant exit targeting, vehicle-assisted escape, opportunistic high-value victim.",
+  "suspects": [
+    { "suspect_id": "S-01", "description": "Male, 5'9\", instigator, wore black t-shirt", "sketch_path": null },
+    { "suspect_id": "S-02", "description": "Male, 5'7\", physically executed assault, stocky build", "sketch_path": null }
+  ],
+  "evidence": [
+    { "id": "E-01", "type": "cctv", "description": "Restaurant exterior camera captured partial plate of getaway car — MH-04" },
+    { "id": "E-02", "type": "medical", "description": "Victim injuries consistent with blunt force — fist and boot" },
+    { "id": "E-03", "type": "digital", "description": "Victim phone IMEI activated in Mira Road 6 hours after robbery" }
+  ],
+  "blind_spots": [
+    "Victim phone IMEI not flagged until day 4",
+    "Restaurant staff not interviewed until day 3",
+    "No check on similar late-night assault pattern in Malad and Goregaon"
+  ],
+  "resolution": "Phone IMEI activation location led to suspect area. Informant identified suspect 1. All three arrested day 12.",
+  "tags": ["assault", "robbery", "three-person-team", "late-night", "ambush", "vehicle-escape", "imei-tracking"],
+  "embedded": false
+}
