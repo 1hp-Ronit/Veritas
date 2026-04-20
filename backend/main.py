@@ -5,6 +5,8 @@ FastAPI entry point.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import pathlib
 
 from routes.cases import router as cases_router
 
@@ -24,6 +26,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ---------------------------------------------------------------------------
+# Mount static data folder for image serving
+# ---------------------------------------------------------------------------
+DATA_DIR = pathlib.Path(__file__).parent / "data"
+app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
 
 # ---------------------------------------------------------------------------
 # Mount case-related routes under /api/cases

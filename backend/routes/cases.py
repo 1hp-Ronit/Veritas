@@ -105,10 +105,36 @@ async def submit_case(
     except Exception as e:
         print(f"[Neo4j] Warning — could not graph new case {case_id}: {e}")
 
+    # Process similar cases to include a routable preview URL
+    safe_similar_cases = []
+    for sc in similar_cases:
+        sc_copy = dict(sc)
+        sp = sc_copy.get("sketch_path")
+        # ChromaDB stringifies None to "None", so we must explicitly check string literals
+        if sp and str(sp).lower() not in ["none", "null", "", "false"]:
+            try:
+                sc_path = Path(sp)
+                if sc_path.is_absolute():
+                    rel = sc_path.relative_to(_DATA_DIR.parent)
+                    sc_copy["preview_url"] = f"/data/{rel.as_posix()}"
+                else:
+                    # if it's already relative e.g., ./data/cases/...
+                    clean_path = str(sc_path).replace("\\", "/").lstrip("./")
+                    if clean_path.startswith("data/"):
+                        sc_copy["preview_url"] = f"/{clean_path}"
+                    else:
+                        sc_copy["preview_url"] = f"/data/{clean_path}"
+            except Exception:
+                sc_copy["preview_url"] = None
+        else:
+            sc_copy["preview_url"] = None
+        safe_similar_cases.append(sc_copy)
+
     return {
         "case_id": case_id,
         "analysis": analysis,
         "similar_cases_count": len(similar_cases),
+        "similar_cases": safe_similar_cases,
     }
 
 

@@ -27,7 +27,7 @@ export default function Results() {
     return null; // Will redirect shortly
   }
 
-  const { case_id, analysis, similar_cases_count } = submissionResult;
+  const { case_id, analysis, similar_cases_count, similar_cases = [] } = submissionResult;
 
   // Use empty arrays if Gemini fails to follow JSON strictly
   const rankedLeads = Array.isArray(analysis?.ranked_leads) ? analysis.ranked_leads : [];
@@ -43,12 +43,16 @@ export default function Results() {
       const leadsFromSource = rankedLeads.filter(l => l.source_case === lead.source_case);
       const bestConfidence = Math.max(...leadsFromSource.map(l => l.confidence || 0));
       const topAction = leadsFromSource[0]?.action || 'No description';
+      
+      const scMatch = similar_cases.find(sc => sc.case_id === lead.source_case);
+
       matchedCases.push({
         case_id: lead.source_case,
         confidence: bestConfidence,
         summary: topAction,
         lead_count: leadsFromSource.length,
         priority: leadsFromSource[0]?.priority || 'Low',
+        preview_url: scMatch?.preview_url
       });
     }
   });
@@ -111,6 +115,13 @@ export default function Results() {
                         </div>
                       </div>
                       <p className="text-sm text-textSecondary leading-relaxed mb-2">{mc.summary}</p>
+                      
+                      {mc.preview_url && (
+                        <div className="mt-3 mb-4 w-full h-32 rounded-lg overflow-hidden border border-border bg-gray-100 flex items-center justify-center">
+                          <img src={`http://localhost:8000${mc.preview_url}`} alt={`Evidence for ${mc.case_id}`} className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-textMuted">{mc.lead_count} lead{mc.lead_count > 1 ? 's' : ''} sourced</span>
                         <div className="flex items-center gap-1.5">
@@ -145,6 +156,9 @@ export default function Results() {
             const isHigh = lead.priority === 'High';
             const isMid = lead.priority === 'Mid';
             
+            const scMatch = similar_cases.find(sc => sc.case_id === lead.source_case);
+            const previewUrl = scMatch?.preview_url;
+            
             return (
               <div key={idx} className="bg-surface border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex gap-5">
@@ -168,6 +182,16 @@ export default function Results() {
                         {lead.priority || 'Low'}
                       </div>
                     </div>
+
+                    {/* Evidence Preview */}
+                    {previewUrl && (
+                      <div className="mt-2">
+                        <span className="font-semibold text-xs tracking-wider text-textSecondary uppercase mb-1.5 block">Matched Evidence preview</span>
+                        <div className="w-full h-40 max-w-sm rounded-lg overflow-hidden border border-border bg-gray-100 flex items-center justify-center shadow-inner">
+                          <img src={`http://localhost:8000${previewUrl}`} alt="Evidence" className="w-full h-full object-cover" />
+                        </div>
+                      </div>
+                    )}
 
                     {/* Confidence Bar */}
                     <div className="mt-2">

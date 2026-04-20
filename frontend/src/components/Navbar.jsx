@@ -14,11 +14,12 @@ export default function Navbar() {
       <div className="h-16 flex items-center px-6 justify-between">
         
         {/* Left section */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brandBlue to-blue-600 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">V</span>
+        {/* Left section */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center w-12 h-12 pointer-events-none">
+            <img src="/logo.png" alt="Veritas Logo" className="w-full h-full object-contain scale-[2.5]" />
           </div>
-          <span className="text-textPrimary text-lg font-medium">Veritas</span>
+          <span className="text-textPrimary text-lg font-medium tracking-tight">Veritas</span>
           <span className="text-textSecondary text-sm hidden md:block">Intelligence</span>
         </div>
 
@@ -47,9 +48,7 @@ export default function Navbar() {
 
         {/* Right section */}
         <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs ring-2 ring-white">
-            V
-          </div>
+          {/* Empty Space / Profile goes here */}
         </div>
 
       </div>
