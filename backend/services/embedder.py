@@ -58,15 +58,16 @@ def embed_combined(text: str, image_path: str | None = None) -> list[float]:
     """
     text_vec = np.array(embed_text(text))
 
+    # Enforce a base dimension of 512 (to match CLIP's image vector output size)
+    # This prevents ChromaDB crashes when mixing cases with and without images.
+    target_dim = 512
+    if len(text_vec) < target_dim:
+        text_vec = np.pad(text_vec, (0, target_dim - len(text_vec)))
+
     if image_path and os.path.isfile(image_path):
         image_vec = np.array(embed_image(image_path))
-
-        # Align dimensions by zero-padding the shorter vector
-        max_dim = max(len(text_vec), len(image_vec))
-        if len(text_vec) < max_dim:
-            text_vec = np.pad(text_vec, (0, max_dim - len(text_vec)))
-        if len(image_vec) < max_dim:
-            image_vec = np.pad(image_vec, (0, max_dim - len(image_vec)))
+        if len(image_vec) < target_dim:
+            image_vec = np.pad(image_vec, (0, target_dim - len(image_vec)))
 
         combined = (text_vec + image_vec) / 2.0
         combined = combined / np.linalg.norm(combined)
