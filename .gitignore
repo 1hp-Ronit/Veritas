@@ -28,7 +28,8 @@ backend/chroma_store/
 Thumbs.db
 
 # Data uploads (keep structure, ignore content)
-backend/data/cases/*/
+backend/data/cases/*
+!backend/data/cases/.gitkeep
 
 # Distribution / packaging
 dist/
