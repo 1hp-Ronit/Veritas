@@ -63,6 +63,15 @@ def main():
             print(f"  [ChromaDB] ERROR on {case_id}: {e}")
             continue
 
+        # Mark as embedded and save back to the JSON file
+        try:
+            case["embedded"] = True
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(case, f, indent=2, ensure_ascii=False)
+            print(f"  [File]     Marked as embedded: {filepath.name}")
+        except IOError as e:
+            print(f"  [File]     WARNING — could not update {filepath.name}: {e}")
+
         # --- Ingest into Neo4j knowledge graph ---
         try:
             ingest_to_graph(case)

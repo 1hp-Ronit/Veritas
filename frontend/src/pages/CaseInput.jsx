@@ -86,8 +86,9 @@ export default function CaseInput() {
               value={formData.case_id}
               onChange={handleInputChange}
               className="veritas-input font-mono" 
-              placeholder="e.g. CIS-24-001" 
+              placeholder="e.g. CIS-2024-MUM-01" 
             />
+            <p className="text-xs text-textMuted mt-1.5">Unique identifier for tracking this case</p>
           </div>
           <div>
             <label className="veritas-label">Incident type</label>
@@ -132,7 +133,9 @@ export default function CaseInput() {
               value={formData.jurisdiction}
               onChange={handleInputChange}
               className="veritas-input" 
+              placeholder="e.g. Mumbai, Maharashtra"
             />
+            <p className="text-xs text-textMuted mt-1.5">City or district where the incident occurred</p>
           </div>
           <div>
             <label className="veritas-label">Date of incident</label>
@@ -146,25 +149,27 @@ export default function CaseInput() {
           </div>
 
           <div className="md:col-span-2">
-            <label className="veritas-label">Describe the case — victim profile, MO, known facts...</label>
+            <label className="veritas-label">Case Description</label>
             <textarea 
               name="description"
               value={formData.description}
               onChange={handleInputChange}
               className="veritas-input resize-none" 
-              rows="3" 
+              rows="3"
             />
+            <p className="text-xs text-textMuted mt-1.5">Detailed narrative of the incident. The more detail you provide, the better the AI can match similar historical cases.</p>
           </div>
 
           <div className="md:col-span-2">
-            <label className="veritas-label">Modus operandi</label>
+            <label className="veritas-label">Modus Operandi (MO)</label>
             <textarea 
               name="modus_operandi"
               value={formData.modus_operandi}
               onChange={handleInputChange}
               className="veritas-input resize-none" 
-              rows="2" 
+              rows="2"
             />
+            <p className="text-xs text-textMuted mt-1.5">The criminal's method of operation — how the crime was carried out, patterns, tools used, entry/exit strategy, and behavioral signatures.</p>
           </div>
 
           <div className="md:col-span-2">
@@ -174,8 +179,9 @@ export default function CaseInput() {
               value={formData.tags}
               onChange={handleInputChange}
               className="veritas-input font-mono text-xs" 
-              placeholder="armed-robbery, two-person-team..." 
+              placeholder="e.g. armed-robbery, two-person-team, jewellery, nighttime, cctv-disabled" 
             />
+            <p className="text-xs text-textMuted mt-1.5">Comma-separated keywords to help categorize and cross-reference with similar cases</p>
           </div>
         </div>
       </div>

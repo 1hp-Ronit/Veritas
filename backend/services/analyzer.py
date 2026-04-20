@@ -7,6 +7,7 @@ The Gemini client is initialized once at module level.
 
 import os
 import json
+import time
 from dotenv import load_dotenv
 import google.generativeai as genai
 
@@ -36,9 +37,9 @@ The following resolved cases were retrieved as structurally similar:
 ---
 
 Based on the resolved cases, do the following:
-1. Generate a ranked list of investigative leads for the new case. For each lead specify: action, priority (High / Mid / Low), which source case it came from, and a confidence score (0-100).
-2. Generate a blind spot checklist — things the resolved cases flagged as missed early on that the investigator should not miss this time.
-3. Write a one paragraph summary of your findings.
+1. Generate a ranked list of the TOP 7 (maximum) most actionable investigative leads for the new case. For each lead specify: action, priority (High / Mid / Low), which source case it came from, and a confidence score (0-100). Focus on quality over quantity — only include the most impactful leads.
+2. Generate a blind spot checklist of up to 5 items — the most critical things the resolved cases flagged as missed early on that the investigator should not miss this time.
+3. Write a concise one paragraph summary of your findings (3-4 sentences max).
 
 Respond strictly in this JSON format:
 {{
@@ -70,8 +71,22 @@ def analyze_case(new_case: dict, similar_cases: list[dict]) -> dict:
         similar_cases_json=similar_cases_json,
     )
 
-    # Call Gemini
-    response = _model.generate_content(prompt)
+    # Call Gemini with retry logic for rate limiting
+    max_retries = 3
+    retry_delay = 15  # seconds
+
+    for attempt in range(max_retries + 1):
+        try:
+            response = _model.generate_content(prompt)
+            break
+        except Exception as e:
+            error_msg = str(e).lower()
+            if ("quota" in error_msg or "rate" in error_msg or "429" in error_msg or "resource" in error_msg) and attempt < max_retries:
+                wait_time = retry_delay * (attempt + 1)
+                print(f"[Gemini] Rate limited (attempt {attempt + 1}/{max_retries}). Retrying in {wait_time}s...")
+                time.sleep(wait_time)
+            else:
+                raise
 
     # Extract and parse the JSON from the response
     response_text = response.text.strip()
