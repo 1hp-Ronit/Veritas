@@ -133,3 +133,6 @@ npm run dev
 3. **Run Retrieval**: The system will embed your input, retrieve the top structurally and semantically similar cases from ChromaDB, and feed them to Gemini.
 4. **View Results**: Review the AI's ranked leads and blind spots. You can see exactly which historical cases were matched and their similarity confidence scores.
 5. **Explore Evidence Graph**: Open the graph viewer to see a visual node-edge network of the current case connected to past cases via shared patterns, tags, and semantic similarities.
+
+
+'Made with love for GDG Solutions - Build with AI'
