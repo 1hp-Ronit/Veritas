@@ -52,7 +52,8 @@ export default function Results() {
         summary: topAction,
         lead_count: leadsFromSource.length,
         priority: leadsFromSource[0]?.priority || 'Low',
-        preview_url: scMatch?.preview_url
+        preview_url: scMatch?.preview_url,
+        similarity_score: scMatch?.similarity_score || null,
       });
     }
   });
@@ -66,10 +67,10 @@ export default function Results() {
           onClick={() => setShowMatchesPopup(true)}
           className="bg-green-50 border border-green-200 text-green-700 text-sm px-3 py-1 rounded-full font-medium shadow-sm cursor-pointer hover:bg-green-100 hover:border-green-300 transition-colors"
         >
-          {similar_cases_count} matches
+          {matchedCases.length} matches
         </button>
       </div>
-      <div className="text-sm text-textSecondary mb-8">Retrieval complete &middot; {similar_cases_count} matches found</div>
+      <div className="text-sm text-textSecondary mb-8">Retrieval complete &middot; {matchedCases.length} matches found</div>
 
       {/* Matches Popup */}
       {showMatchesPopup && (
@@ -80,7 +81,7 @@ export default function Results() {
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-bold uppercase tracking-wider text-textSecondary">
-                  {similar_cases_count} Matched Cases
+                  {matchedCases.length} Matched Cases
                 </span>
               </div>
               <button 
@@ -122,14 +123,25 @@ export default function Results() {
                         </div>
                       )}
                       
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between flex-wrap gap-y-1.5">
                         <span className="text-xs text-textMuted">{mc.lead_count} lead{mc.lead_count > 1 ? 's' : ''} sourced</span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs text-textMuted">Confidence:</span>
-                          <div className="w-16 bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                            <div className="bg-blue-500 h-full rounded-full" style={{ width: `${mc.confidence}%` }} />
+                        <div className="flex items-center gap-3">
+                          {mc.similarity_score && (
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs text-textMuted">Similarity:</span>
+                              <div className="w-12 bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                                <div className="bg-green-500 h-full rounded-full" style={{ width: `${mc.similarity_score}%` }} />
+                              </div>
+                              <span className="text-xs font-medium text-green-600">{mc.similarity_score}%</span>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs text-textMuted">Confidence:</span>
+                            <div className="w-12 bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                              <div className="bg-blue-500 h-full rounded-full" style={{ width: `${mc.confidence}%` }} />
+                            </div>
+                            <span className="text-xs font-medium text-blue-600">{mc.confidence}%</span>
                           </div>
-                          <span className="text-xs font-medium text-blue-600">{mc.confidence}%</span>
                         </div>
                       </div>
                     </div>

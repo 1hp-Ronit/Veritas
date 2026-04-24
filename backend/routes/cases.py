@@ -10,7 +10,7 @@ from pathlib import Path
 from fastapi import APIRouter, File, Form, UploadFile, HTTPException
 from pydantic import BaseModel
 
-from services.retriever import ingest_case, retrieve_similar
+from services.retriever import ingest_case, retrieve_similar, retrieve_similar_ids
 from services.graph import ingest_to_graph, get_case_graph
 from services.analyzer import analyze_case
 
@@ -165,14 +165,38 @@ async def ingest(request: IngestRequest):
 async def graph(case_id: str):
     """
     Fetch the subgraph (nodes + edges) for a given case_id from Neo4j.
+    Also queries ChromaDB for semantically similar cases (RAG matches) and
+    includes them as SIMILAR_TO edges — so the graph is never empty even when
+    there are no exact tag matches.
     Returns data formatted for React Flow consumption on the frontend.
     """
+    # Query ChromaDB to find similar cases based on the case's own text
+    similar_ids = []
     try:
-        result = get_case_graph(case_id)
+        # Try to reconstruct the query text from Neo4j case properties
+        from neo4j import GraphDatabase
+        from services.graph import _driver, _neo4j_database
+        with _driver.session(database=_neo4j_database) as session:
+            case_result = session.run(
+                "MATCH (c:Case {case_id: $cid}) RETURN c",
+                cid=case_id,
+            )
+            record = case_result.single()
+            if record:
+                case_node = record["c"]
+                query_text = f"{case_node.get('description', '')} {case_node.get('modus_operandi', '')}"
+                if query_text.strip():
+                    similar_ids = retrieve_similar_ids(query_text, top_k=10)
+    except Exception as e:
+        print(f"[Graph] ChromaDB similarity lookup skipped: {e}")
+
+    try:
+        result = get_case_graph(case_id, similar_case_ids=similar_ids)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Graph query failed: {str(e)}")
 
     return result
+
 
 
 # ---------------------------------------------------------------------------

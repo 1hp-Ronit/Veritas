@@ -99,12 +99,15 @@ def ingest_to_graph(case: dict) -> None:
         )
 
 
-def get_case_graph(case_id: str) -> dict:
+def get_case_graph(case_id: str, similar_case_ids: list[dict] | None = None) -> dict:
     """
     Retrieve the subgraph for a given case_id.
     Returns a dict with "nodes" and "edges" lists formatted for React Flow.
     Each node has: {id, type, data: {label, ...properties}}
     Each edge has: {id, source, target, label}
+
+    If similar_case_ids is provided (list of dicts with case_id + similarity_score),
+    those cases are added as SIMILAR_TO edges from ChromaDB RAG matching.
     """
     nodes = []
     edges = []
@@ -212,5 +215,57 @@ def get_case_graph(case_id: str) -> dict:
                     "target": other_id,
                     "label": f"SHARES_TAG ({shared_tag})",
                 })
+
+        # --- Add ChromaDB similar cases (RAG-matched) as SIMILAR_TO edges ---
+        if similar_case_ids:
+            for sim in similar_case_ids:
+                sim_case_id = sim.get("case_id", "")
+                sim_score = sim.get("similarity_score", 0)
+
+                # Skip self-matches
+                if sim_case_id == case_id or not sim_case_id:
+                    continue
+
+                # Try to fetch the case node from Neo4j for full details
+                if sim_case_id not in seen_nodes:
+                    case_result = session.run(
+                        "MATCH (c:Case {case_id: $cid}) RETURN c",
+                        cid=sim_case_id,
+                    )
+                    record = case_result.single()
+                    if record:
+                        neo_case = record["c"]
+                        nodes.append({
+                            "id": sim_case_id,
+                            "type": "case",
+                            "data": {
+                                "label": neo_case.get("title", sim_case_id),
+                                "similarity_score": sim_score,
+                                **dict(neo_case),
+                            },
+                        })
+                    else:
+                        # Case exists in ChromaDB but not yet in Neo4j
+                        nodes.append({
+                            "id": sim_case_id,
+                            "type": "case",
+                            "data": {
+                                "label": sim_case_id,
+                                "case_id": sim_case_id,
+                                "similarity_score": sim_score,
+                            },
+                        })
+                    seen_nodes.add(sim_case_id)
+
+                edge_key = (case_id, sim_case_id, "SIMILAR_TO")
+                if edge_key not in seen_edges:
+                    seen_edges.add(edge_key)
+                    edge_counter += 1
+                    edges.append({
+                        "id": f"e{edge_counter}",
+                        "source": case_id,
+                        "target": sim_case_id,
+                        "label": f"SIMILAR_TO ({sim_score}%)",
+                    })
 
     return {"nodes": nodes, "edges": edges}

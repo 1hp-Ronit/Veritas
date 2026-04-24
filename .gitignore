@@ -29,7 +29,9 @@ Thumbs.db
 
 # Data uploads (keep structure, ignore content)
 backend/data/cases/*
+backend/data/images/*
 !backend/data/cases/.gitkeep
+!backend/data/images/.gitkeep
 
 # Distribution / packaging
 dist/

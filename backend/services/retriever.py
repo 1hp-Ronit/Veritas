@@ -61,30 +61,65 @@ def ingest_case(case: dict) -> None:
 def retrieve_similar(
     query_text: str,
     query_image_path: str | None = None,
-    top_k: int = 5,
+    top_k: int = 10,
 ) -> list[dict]:
     """
     Find the top_k most similar cases to the given query.
     - Embeds the query using embed_combined (text + optional image).
     - Queries ChromaDB and returns results as a list of metadata dicts.
+    - Each returned dict includes a 'similarity_score' (0-100) derived from cosine distance.
     """
     query_embedding = embed_combined(query_text, query_image_path)
 
     results = _collection.query(
         query_embeddings=[query_embedding],
         n_results=top_k,
+        include=["metadatas", "distances"],
     )
 
     # Parse metadata back from string-serialized JSON where applicable
     cases = []
     if results["metadatas"]:
-        for meta in results["metadatas"][0]:
+        distances = results.get("distances", [[]])[0]
+        for idx, meta in enumerate(results["metadatas"][0]):
             parsed = {}
             for k, v in meta.items():
                 try:
                     parsed[k] = json.loads(v)
                 except (json.JSONDecodeError, TypeError):
                     parsed[k] = v
+            # Cosine distance → similarity score (0-100)
+            dist = distances[idx] if idx < len(distances) else 1.0
+            parsed["similarity_score"] = round((1 - dist) * 100, 1)
             cases.append(parsed)
+
+    return cases
+
+
+def retrieve_similar_ids(
+    query_text: str,
+    query_image_path: str | None = None,
+    top_k: int = 10,
+) -> list[dict]:
+    """
+    Lightweight version that returns just case_ids and similarity scores.
+    Used by the graph service to build similarity edges without full metadata.
+    """
+    query_embedding = embed_combined(query_text, query_image_path)
+
+    results = _collection.query(
+        query_embeddings=[query_embedding],
+        n_results=top_k,
+        include=["metadatas", "distances"],
+    )
+
+    cases = []
+    if results["metadatas"]:
+        distances = results.get("distances", [[]])[0]
+        for idx, meta in enumerate(results["metadatas"][0]):
+            case_id = meta.get("case_id", "")
+            dist = distances[idx] if idx < len(distances) else 1.0
+            similarity = round((1 - dist) * 100, 1)
+            cases.append({"case_id": case_id, "similarity_score": similarity})
 
     return cases

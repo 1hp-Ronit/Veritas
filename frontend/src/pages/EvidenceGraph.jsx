@@ -134,10 +134,14 @@ const applyStylesToNodesAndEdges = (radiallyLayoutedNodes, apiEdges, currentCase
     const isShared = e.label?.includes('SHARES_TAG');
     const isTagged = e.label === 'TAGGED_WITH';
     const isEvidence = e.label === 'HAS_EVIDENCE';
+    const isSimilar = e.label?.includes('SIMILAR_TO');
 
     const edgeId = e.id || `e-${e.source}-${e.target}-${idx}`;
-    const cleanEdge = { id: edgeId, source: e.source, target: e.target, animated: false };
+    const cleanEdge = { id: edgeId, source: e.source, target: e.target, animated: false, label: e.label };
 
+    if (isSimilar) {
+      return { ...cleanEdge, style: { stroke: '#34a853', strokeWidth: 2, opacity: 0.85 }, animated: true };
+    }
     if (isShared) {
       return { ...cleanEdge, style: { stroke: '#fbbc04', strokeWidth: 1.5, opacity: 0.8 }, animated: true };
     }
@@ -232,6 +236,7 @@ export default function EvidenceGraph() {
       jurisdiction: data.jurisdiction || null,
       modus_operandi: data.modus_operandi || null,
       name: data.name || null,
+      similarity_score: data.similarity_score || null,
     });
   }, []);
   
@@ -358,7 +363,7 @@ export default function EvidenceGraph() {
               {buildNodeDescription(selectedNode)}
             </p>
             {selectedNode.incident_type && selectedNode.type !== 'tag' && selectedNode.type !== 'evidence' && (
-              <div className="mt-3 flex items-center gap-2">
+              <div className="mt-3 flex items-center gap-2 flex-wrap">
                 <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium border border-blue-100">
                   {selectedNode.incident_type.replace(/_/g, ' ')}
                 </span>
@@ -367,6 +372,15 @@ export default function EvidenceGraph() {
                     {selectedNode.jurisdiction}
                   </span>
                 )}
+              </div>
+            )}
+            {selectedNode.similarity_score && (
+              <div className="mt-3 flex items-center gap-2">
+                <span className="text-xs text-textMuted">RAG Similarity:</span>
+                <div className="w-20 bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-green-500 h-full rounded-full" style={{ width: `${selectedNode.similarity_score}%` }} />
+                </div>
+                <span className="text-xs font-medium text-green-600">{selectedNode.similarity_score}%</span>
               </div>
             )}
           </div>
@@ -396,7 +410,11 @@ export default function EvidenceGraph() {
           </div>
           <div className="flex items-center gap-3 mt-1">
             <div className="w-5 h-[3px] bg-brandAmber"></div>
-            <span className="text-sm font-medium text-textPrimary">Shares pattern</span>
+            <span className="text-sm font-medium text-textPrimary">Shares tag</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-5 h-[3px] bg-[#34a853]"></div>
+            <span className="text-sm font-medium text-textPrimary">RAG similar</span>
           </div>
         </div>
       </div>
