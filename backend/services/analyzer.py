@@ -20,7 +20,12 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 _api_key = os.getenv("GEMINI_API_KEY", "")
 genai.configure(api_key=_api_key)
-_model = genai.GenerativeModel("gemini-3-flash-preview")
+_FALLBACK_MODELS = [
+    "gemini-2.5-flash",
+    "gemini-3-flash-preview",
+    "gemini-2.0-flash",
+    "gemini-flash-latest"
+]
 
 # ---------------------------------------------------------------------------
 # Prompt template for case analysis
@@ -123,9 +128,9 @@ def analyze_case(new_case: dict, similar_cases: list[dict]) -> dict:
       - blind_spot_checklist: list of strings
       - summary:             str
     """
-    # Strip down to top 3 cases and only keep essential fields to save tokens
+    # Strip down to top 4 cases and only keep essential fields to save tokens
     optimized_similar_cases = []
-    for sc in similar_cases[:3]:
+    for sc in similar_cases[:4]:
         optimized_similar_cases.append({
             "case_id": sc.get("case_id"),
             "description": sc.get("description"),
@@ -143,31 +148,27 @@ def analyze_case(new_case: dict, similar_cases: list[dict]) -> dict:
         similar_cases_json=similar_cases_json,
     )
 
-    # Retry with exponential backoff — at most 2 retries
-    max_retries = 2
-    base_delay = 30  # seconds
-
+    # Try models in order, falling back to the next if rate-limited
     response = None
-    for attempt in range(max_retries + 1):
+    for attempt, model_name in enumerate(_FALLBACK_MODELS):
         try:
-            response = _model.generate_content(prompt)
+            model = genai.GenerativeModel(model_name)
+            response = model.generate_content(prompt)
             break
         except Exception as e:
             error_msg = str(e).lower()
             is_rate_limit = any(kw in error_msg for kw in ("quota", "rate", "429", "resource_exhausted", "resource"))
 
-            if is_rate_limit and attempt < max_retries:
-                wait_time = base_delay * (2 ** attempt)  # 30s, 60s
-                print(f"[Gemini] Rate limited (attempt {attempt + 1}/{max_retries}). "
-                      f"Backing off {wait_time}s...")
-                time.sleep(wait_time)
+            if is_rate_limit and attempt < len(_FALLBACK_MODELS) - 1:
+                logger.warning(f"[Gemini] Rate limited on {model_name}. Switching to next model...")
+                time.sleep(2)  # Small delay before trying next model
             elif is_rate_limit:
-                # All retries exhausted — use local fallback
-                logger.warning(f"[Gemini] Rate limit persists after {max_retries} retries. Using fallback analysis for case {new_case.get('case_id', 'unknown')}.")
+                # All models exhausted — use local fallback
+                logger.warning(f"[Gemini] Rate limit persists across all models. Using fallback analysis for case {new_case.get('case_id', 'unknown')}.")
                 return _build_fallback_analysis(new_case, similar_cases)
             else:
                 # Non-rate-limit error — also fallback to avoid crashing
-                logger.warning(f"[Gemini] Unexpected error: {e}. Using fallback analysis for case {new_case.get('case_id', 'unknown')}.")
+                logger.warning(f"[Gemini] Unexpected error on {model_name}: {e}. Using fallback analysis for case {new_case.get('case_id', 'unknown')}.")
                 return _build_fallback_analysis(new_case, similar_cases)
 
     # Extract and parse the JSON from the response
