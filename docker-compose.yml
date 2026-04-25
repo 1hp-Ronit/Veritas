@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  chromadb:
+    build:
+      context: ./backend
+      dockerfile: chroma.Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+    volumes:
+      - chroma-data:/chroma/chroma
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - chromadb
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Pass environment variables for the frontend build
+        - VITE_API_URL=http://localhost:8000
+        # Optional: We could also pass Supabase keys here if needed, 
+        # but the Dockerfile context includes .env.local if present.
+        # It's better to explicitly read them if we want to rely on the compose file entirely,
+        # but Vite automatically picks up .env.local during the build process, so we rely on that.
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  chroma-data:

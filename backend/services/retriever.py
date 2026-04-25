@@ -16,8 +16,9 @@ load_dotenv()
 # ---------------------------------------------------------------------------
 # Initialize ChromaDB with local persistence
 # ---------------------------------------------------------------------------
-_persist_path = os.getenv("CHROMA_PERSIST_PATH", "./chroma_store")
-_chroma_client = chromadb.PersistentClient(path=_persist_path)
+_chroma_host = os.getenv("CHROMA_HOST", "localhost")
+_chroma_port = os.getenv("CHROMA_PORT", "8000")
+_chroma_client = chromadb.HttpClient(host=_chroma_host, port=int(_chroma_port))
 _collection = _chroma_client.get_or_create_collection(
     name="veritas_cases",
     metadata={"hnsw:space": "cosine"},

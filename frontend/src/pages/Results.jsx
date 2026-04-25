@@ -119,7 +119,7 @@ export default function Results() {
                       
                       {mc.preview_url && (
                         <div className="mt-3 mb-4 w-full h-32 rounded-lg overflow-hidden border border-border bg-gray-100 flex items-center justify-center">
-                          <img src={`http://localhost:8000${mc.preview_url}`} alt={`Evidence for ${mc.case_id}`} className="w-full h-full object-cover" />
+                          <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${mc.preview_url}`} alt={`Evidence for ${mc.case_id}`} className="w-full h-full object-cover" />
                         </div>
                       )}
                       
@@ -200,7 +200,7 @@ export default function Results() {
                       <div className="mt-2">
                         <span className="font-semibold text-xs tracking-wider text-textSecondary uppercase mb-1.5 block">Matched Evidence preview</span>
                         <div className="w-full h-40 max-w-sm rounded-lg overflow-hidden border border-border bg-gray-100 flex items-center justify-center shadow-inner">
-                          <img src={`http://localhost:8000${previewUrl}`} alt="Evidence" className="w-full h-full object-cover" />
+                          <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${previewUrl}`} alt="Evidence" className="w-full h-full object-cover" />
                         </div>
                       </div>
                     )}
